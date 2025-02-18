@@ -5,11 +5,11 @@ The class `BaiduTranslator` is support for [vite-plugin-auto-i18n](https://githu
 
 #### Install
 ```shell
-npm install @ng1005/baidu_translate_web_api
+npm install @ng1005/baidu_translate_web_api -D
 
-pnpm install @ng1005/baidu_translate_web_api
+pnpm install @ng1005/baidu_translate_web_api -D
 
-yarn add @ng1005/baidu_translate_web_api
+yarn add @ng1005/baidu_translate_web_api -D
 ```
 
 #### Used

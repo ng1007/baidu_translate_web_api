@@ -4,11 +4,11 @@
 `BaiduTranslator` 这个类支持[vite-plugin-auto-i18n](https://github.com/wenps/i18n_translation_vite)进行使用
 #### 安装
 ```shell
-npm install @ng1005/baidu_translate_web_api
+npm install @ng1005/baidu_translate_web_api -D
 
-pnpm install @ng1005/baidu_translate_web_api
+pnpm install @ng1005/baidu_translate_web_api -D
 
-yarn add @ng1005/baidu_translate_web_api
+yarn add @ng1005/baidu_translate_web_api -D
 ```
 
 #### 使用

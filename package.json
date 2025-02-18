@@ -1,7 +1,7 @@
 {
   "name": "@ng1005/baidu_translate_web_api",
   "description": "Baidu web translate to api, baidu translate for vite-plugin-auto-i18n",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "",
   "keywords": [
     "translate",
