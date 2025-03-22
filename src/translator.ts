@@ -3,7 +3,7 @@ export interface TranslatorOption {
     fetchMethod: (text: string, fromKey: string, toKey: string) => Promise<string>
     name?: string
     /** 执行间隔（默认不开启） */
-    interval?: number
+    interval?: number,
 }
 
 class IntervalQueue<T extends any[], U extends any> {
@@ -94,7 +94,7 @@ export class Translator {
         } catch (error) {
             const name = this.option.name
             console.error(
-                `翻译api${name ? `【${name}】` : ''}请求异常：${this.getErrorMessage(error)}`
+                `翻译api${name ? `【${name}】` : ''}请求异常：${text}-${this.getErrorMessage(error)}`
             )
         }
         return result

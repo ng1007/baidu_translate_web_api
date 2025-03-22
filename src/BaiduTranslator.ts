@@ -41,27 +41,33 @@ export async function translate(str:string,from='zh',to='en',options:BaiduTransl
     "milliTimestamp": timestamp
   }
   const resp=await axios.post(url,data,{
-    timeout:options.interval??10000,
+    timeout:10000,
     proxy: options.proxy
   })
   const res=resp.data
   let result=''
-  const messages=res.replaceAll("event: message\n",'').split("data: ")
+  const messages=res.split("event: message\ndata: ")
   const separator=options.separator||SEPARATOR
   messages.forEach((message:any)=>{
     message=message.trim()
     if(message){
-      let msg=JSON.parse(message)
-      if(msg.errno==0&&msg.data.event=='Translating'){
-        let list:string[]=[]
-        let sep=separator.replaceAll('\n','')
-        msg.data.list.forEach((i:TranslatingItem)=>{
-          if(i.src!=sep){
-            list.push(i.dst)
-          }
-        })
-        result=list.join(separator)
-      }
+        let msg:{[key:string]:any}={}
+        try {
+          msg=JSON.parse(message)
+        } catch (error) {
+          console.error(`翻译错误：${message}\n${res}`)
+        }
+        if(msg.errno==0&&msg.data.event=='Translating'){
+          let list:string[]=[]
+          let sep=separator.replaceAll('\n','')
+          msg.data.list.forEach((i:TranslatingItem)=>{
+            if(i.src!=sep){
+              list.push(i.dst)
+            }
+          })
+          result=list.join(separator)
+        }
+      
     }
   })
   return result
@@ -73,9 +79,32 @@ export class BaiduTranslator extends Translator{
   constructor(option: BaiduTranslatorOption) {
     super({
       name: 'Baidu翻译',
+      interval:option.interval,
       fetchMethod: async (text, fromKey, toKey) => {
-        let data = await translate(text, fromKey,toKey,option)
-        return data|| ''
+        let textList=[];
+        textList=text.split(SEPARATOR)
+        let arr=textList.splice(0,10)
+        let result=[]
+        let arrList=[]
+        arrList.push(JSON.parse(JSON.stringify(arr)));
+        let dataList=[]
+        while (arr.length>0) {
+          try {
+            let data = await translate(arr.join(SEPARATOR), fromKey,toKey,option)
+            dataList.push(data.split(SEPARATOR))
+            result.push(data)
+          } catch (error) {
+            console.error(`🙅翻译请求错误:${JSON.stringify(arr)}`)
+          }
+          arr=textList.splice(0,10)
+          arrList.push(JSON.parse(JSON.stringify(arr)));
+        }
+        let resultLength=result.join(SEPARATOR).split(SEPARATOR).length
+        let textLength=text.split(SEPARATOR).length;
+        if(textLength!=resultLength){
+          console.error(`🙅翻译请求错误长度不一致:${textLength}-${resultLength}\n${text}\n${result.join(SEPARATOR)}`)
+        }
+        return result.join(SEPARATOR)|| ''
       }
     })
   }
